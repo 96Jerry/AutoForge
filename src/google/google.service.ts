@@ -27,20 +27,23 @@ export class GoogleService {
   // 매일 09:00 시
   @Cron('0 0 9 * * *')
   async sendVacationEmail() {
-    const holidays = await this.getHolidays();
-
     const today = new Date();
+    console.log(`Cron Job is running...${today}`);
+
+    const holidays = await this.getHolidays();
 
     if (
       today.getDay() === 6 ||
       today.getDay() === 0 ||
       holidays.includes(new Intl.DateTimeFormat('en-CA').format(today))
     ) {
+      console.log('휴일엔 작동하지 않습니다...');
       return '휴일엔 작동하지 않습니다...';
     }
 
     const vacationDate = await this.getRecentVacationDate();
     if (!vacationDate) {
+      console.log('휴가 없음');
       return '휴가 없음';
     }
 
@@ -55,6 +58,7 @@ export class GoogleService {
     }
 
     if (nextDay.toISOString().slice(0, 10) !== vacationDate) {
+      console.log('아직 때가 아닙니다...');
       return '아직 때가 아닙니다...';
     }
 
@@ -72,6 +76,7 @@ export class GoogleService {
       emailData,
     );
 
+    console.log('Email sent');
     return result;
   }
 
