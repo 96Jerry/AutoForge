@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { transformDate1, transformDate2 } from 'src/utils/date';
 import { html } from '.';
 import { GoogleStrategy } from './enums/google-strategy.enum';
@@ -24,19 +23,28 @@ export class GoogleService {
     }
   }
 
-  // 매일 09:00 시
-  @Cron('0 0 9 * * *')
+  private async checkPublicHoliday(date: Date) {
+    const publicHolidays = await this.getHolidays();
+
+    return publicHolidays.includes(
+      new Intl.DateTimeFormat('en-CA').format(date),
+    );
+  }
+
+  private async checkHoliday(date: Date) {
+    const isSaturday = date.getDay() === 6;
+    const isSunday = date.getDay() === 0;
+    const isPublicHoliday = await this.checkPublicHoliday(date);
+
+    return isSaturday || isSunday || isPublicHoliday;
+  }
+
   async sendVacationEmail() {
     const today = new Date();
     console.log(`Cron Job is running...${today}`);
 
-    const holidays = await this.getHolidays();
-
-    if (
-      today.getDay() === 6 ||
-      today.getDay() === 0 ||
-      holidays.includes(new Intl.DateTimeFormat('en-CA').format(today))
-    ) {
+    const isHoliday = await this.checkHoliday(today);
+    if (isHoliday) {
       console.log('휴일엔 작동하지 않습니다...');
       return '휴일엔 작동하지 않습니다...';
     }
@@ -47,14 +55,12 @@ export class GoogleService {
       return '휴가 없음';
     }
 
-    let nextDay = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-    // 토요일, 일요일, 공휴일
-    while (
-      nextDay.getDay() === 6 ||
-      nextDay.getDay() === 0 ||
-      holidays.includes(new Intl.DateTimeFormat('en-CA').format(nextDay))
-    ) {
-      nextDay = new Date(nextDay.getTime() + 24 * 60 * 60 * 1000);
+    const oneDay = 24 * 60 * 60 * 1000;
+    let nextDay = new Date(today.getTime() + oneDay);
+
+    const isNextDayHoliday = await this.checkHoliday(nextDay);
+    while (isNextDayHoliday) {
+      nextDay = new Date(nextDay.getTime() + oneDay);
     }
 
     if (nextDay.toISOString().slice(0, 10) !== vacationDate) {

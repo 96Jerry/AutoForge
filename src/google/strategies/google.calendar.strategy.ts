@@ -14,7 +14,7 @@ export class GoogleCalendarStrategy {
       const res = await calendar.events.list({
         calendarId: id,
         timeMin: new Date().toISOString(),
-        maxResults: 10,
+        maxResults: 14,
         singleEvents: true,
         orderBy: 'startTime',
       });
