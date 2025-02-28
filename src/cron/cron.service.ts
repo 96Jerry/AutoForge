@@ -9,13 +9,13 @@ export class CronService {
 
   // 매일 9시
   @Cron('0 0 9 * * *')
-  async sendVacationEmail() {
-    this.googleService.sendVacationEmail();
+  async sendVacationEmail(): Promise<void> {
+    return this.googleService.sendVacationEmail();
   }
 
-  // 매주 월~금, 9시 ~ 18시 매 시간 정각 마다
-  @Cron('0 0 9-18 * * 1-5')
-  async alarmCheckDiscordEveryHour() {
+  // 매주 월~금, 9시 ~ 12시, 14시 ~ 17시 매 시간 정각 마다
+  @Cron('0 0 9-12,14-17 * * 1-5')
+  async alarmCheckDiscordEveryHour(): Promise<void> {
     notifier.notify(
       {
         title: '커스텀 알람',
@@ -31,7 +31,7 @@ export class CronService {
 
   // 매주 월~금, 9시, 14시 정각 마다
   @Cron('0 0 9,14 * * 1-5')
-  async alarmCheckEmailTwiceADay() {
+  async alarmCheckEmailTwiceADay(): Promise<void> {
     notifier.notify(
       {
         title: '커스텀 알람',

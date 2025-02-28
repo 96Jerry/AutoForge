@@ -1,5 +1,12 @@
 export const transformDate1 = (date: string) => {
-  const [year, month, day] = date.split('-');
+  const [_year, _month, day] = date.split('-');
+  const monthName = new Date(date).toLocaleString('en-US', { month: 'long' });
+
+  return `${monthName.slice(0, 3)} ${day}${getOrdinalSuffix(day)}`;
+};
+
+export const transformDate2 = (date: string) => {
+  const [_year, _month, day] = date.split('-');
   const monthName = new Date(date).toLocaleString('en-US', { month: 'long' });
 
   return `${monthName} ${day}${getOrdinalSuffix(day)}`;
@@ -22,11 +29,4 @@ export const getOrdinalSuffix = (day: string) => {
     default:
       return 'th';
   }
-};
-
-export const transformDate2 = (date: string) => {
-  const [year, month, day] = date.split('-');
-  const monthName = new Date(date).toLocaleString('en-US', { month: 'long' });
-
-  return `${monthName.slice(0, 3)} ${day}${getOrdinalSuffix(day)}`;
 };

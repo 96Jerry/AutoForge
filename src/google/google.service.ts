@@ -23,36 +23,20 @@ export class GoogleService {
     }
   }
 
-  private async checkPublicHoliday(date: Date) {
-    const publicHolidays = await this.getHolidays();
-
-    return publicHolidays.includes(
-      new Intl.DateTimeFormat('en-CA').format(date),
-    );
-  }
-
-  private async checkHoliday(date: Date) {
-    const isSaturday = date.getDay() === 6;
-    const isSunday = date.getDay() === 0;
-    const isPublicHoliday = await this.checkPublicHoliday(date);
-
-    return isSaturday || isSunday || isPublicHoliday;
-  }
-
-  async sendVacationEmail() {
+  async sendVacationEmail(): Promise<void> {
     const today = new Date();
     console.log(`Cron Job is running...${today}`);
 
     const isHoliday = await this.checkHoliday(today);
     if (isHoliday) {
       console.log('휴일엔 작동하지 않습니다...');
-      return '휴일엔 작동하지 않습니다...';
+      return;
     }
 
     const vacationDate = await this.getRecentVacationDate();
     if (!vacationDate) {
       console.log('휴가 없음');
-      return '휴가 없음';
+      return;
     }
 
     const oneDay = 24 * 60 * 60 * 1000;
@@ -65,11 +49,11 @@ export class GoogleService {
 
     if (nextDay.toISOString().slice(0, 10) !== vacationDate) {
       console.log('아직 때가 아닙니다...');
-      return '아직 때가 아닙니다...';
+      return;
     }
 
-    const date1 = transformDate2(vacationDate);
-    const date2 = transformDate1(vacationDate);
+    const date1 = transformDate1(vacationDate);
+    const date2 = transformDate2(vacationDate);
 
     const emailData = {
       from: 'Jay Lim <jay@madsq.net>',
@@ -82,11 +66,28 @@ export class GoogleService {
       emailData,
     );
 
-    console.log('Email sent');
-    return result;
+    console.log('Email sent', result);
+
+    return;
   }
 
-  private async getHolidays() {
+  private async checkHoliday(date: Date) {
+    const isSaturday = date.getDay() === 6;
+    const isSunday = date.getDay() === 0;
+    const isPublicHoliday = await this.checkPublicHoliday(date);
+
+    return isSaturday || isSunday || isPublicHoliday;
+  }
+
+  private async checkPublicHoliday(date: Date) {
+    const publicHolidays = await this.getHolidays();
+
+    return publicHolidays.includes(
+      new Intl.DateTimeFormat('en-CA').format(date),
+    );
+  }
+
+  private async getHolidays(): Promise<string[]> {
     const holidayEvent = await this.getStrategy(
       GoogleStrategy.Calendar,
     ).checkCalendar('en.south_korea#holiday@group.v.calendar.google.com');
@@ -101,7 +102,7 @@ export class GoogleService {
     return holidays;
   }
 
-  private async getRecentVacationDate() {
+  private async getRecentVacationDate(): Promise<string> {
     const vacationEvent = await this.getStrategy(
       GoogleStrategy.Calendar,
     ).checkCalendar(
