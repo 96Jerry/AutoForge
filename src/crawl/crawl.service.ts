@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CrawlService {
-  async flexLogin() {
-    const date = new Date();
-    console.log(`Cron job is running...${date}`);
+  async flexLogin() {}
 
-    // 컴퓨터가 켜질 때,시작
+  /** 일주일 식단표 크롤링 */
+  async getWeeklyMeal() {
+    return '안녕';
   }
 }

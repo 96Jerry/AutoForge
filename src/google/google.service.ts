@@ -4,6 +4,7 @@ import { html } from '.';
 import { GoogleStrategy } from './enums/google-strategy.enum';
 import { GoogleCalendarStrategy } from './strategies/google.calendar.strategy';
 import { GoogleMailStrategy } from './strategies/google.mail.strategy';
+import { GoogleGeminiStrategy } from 'src/google/strategies/google.gemini.strategy';
 
 @Injectable()
 export class GoogleService {
@@ -12,14 +13,18 @@ export class GoogleService {
     private readonly googleCalendarStrategy: GoogleCalendarStrategy,
   ) {}
 
-  getStrategy(name: GoogleStrategy.Mail): GoogleMailStrategy;
-  getStrategy(name: GoogleStrategy.Calendar): GoogleCalendarStrategy;
-
-  getStrategy(name: GoogleStrategy) {
+  private getStrategy(name: GoogleStrategy.Gemini): GoogleGeminiStrategy;
+  private getStrategy(name: GoogleStrategy.Mail): GoogleMailStrategy;
+  private getStrategy(name: GoogleStrategy.Calendar): GoogleCalendarStrategy;
+  private getStrategy(name: GoogleStrategy) {
     if (name === GoogleStrategy.Mail) {
       return this.googleMailStrategy;
     } else if (name === GoogleStrategy.Calendar) {
       return this.googleCalendarStrategy;
+    } else if (name === GoogleStrategy.Gemini) {
+      return new GoogleGeminiStrategy();
+    } else {
+      throw new Error('Invalid strategy name');
     }
   }
 
@@ -118,5 +123,11 @@ export class GoogleService {
     }
 
     return date;
+  }
+
+  async updateWeeklyCalender(data: any) {}
+
+  async analyze(data: any) {
+    return this.getStrategy(GoogleStrategy.Gemini).analyze(data);
   }
 }
