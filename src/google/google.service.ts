@@ -127,7 +127,7 @@ export class GoogleService {
 
   async updateWeeklyCalender(data: any) {}
 
-  async analyze(data: any) {
-    return this.getStrategy(GoogleStrategy.Gemini).analyze(data);
+  async analyze(imagePath: string) {
+    return this.getStrategy(GoogleStrategy.Gemini).analyze(imagePath);
   }
 }

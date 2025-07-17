@@ -12,3 +12,4 @@ export const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI;
 export const GOOGLE_ACCESS_TOKEN = process.env.GOOGLE_ACCESS_TOKEN;
 export const GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 export const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+export const MENU_SITE_URL = process.env.MENU_SITE_URL;
