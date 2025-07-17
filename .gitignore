@@ -5,6 +5,12 @@
 /dist
 /node_modules
 
+# cache
+/cache
+
+# temp
+/temp
+
 # Logs
 logs
 *.log

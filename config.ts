@@ -13,3 +13,4 @@ export const GOOGLE_ACCESS_TOKEN = process.env.GOOGLE_ACCESS_TOKEN;
 export const GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 export const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 export const MENU_SITE_URL = process.env.MENU_SITE_URL;
+export const GOOGLE_CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;

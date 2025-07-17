@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { exec } from 'child_process';
+import { GOOGLE_CALENDAR_ID } from 'config';
 import * as notifier from 'node-notifier';
 import { CrawlService } from 'src/crawl/crawl.service';
 import { GoogleService } from 'src/google/google.service';
@@ -78,10 +79,7 @@ export class CronService {
     // 식단표 분석
     const data = await this.googleService.analyze(weeklyMealImage);
 
-    // 데이터 가공
-    const reproducedData = data;
-
     // 캘린더 업데이트
-    await this.googleService.updateWeeklyCalender(reproducedData);
+    await this.googleService.updateWeeklyCalender(data, GOOGLE_CALENDAR_ID);
   }
 }
