@@ -3,13 +3,26 @@ import puppeteer from 'puppeteer';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { MENU_SITE_URL } from '../../config';
+import { MealPlanService } from '../models/meal-plan/meal-plan.service';
 
 @Injectable()
 export class CrawlService {
+  constructor(private readonly mealPlanService: MealPlanService) {}
+
   async flexLogin() {}
 
   /** 일주일 식단표 크롤링 */
-  async getWeeklyMeal(): Promise<string> {
+  async getWeeklyMeal(): Promise<{ id: number; imagePath: string }> {
+    // 현재 주차의 식단표가 이미 있는지 확인
+    const existingMealPlan = await this.mealPlanService.findCurrentWeek();
+    if (existingMealPlan) {
+      console.log(
+        '이미 이번 주 식단표가 존재합니다:',
+        existingMealPlan.imagePath,
+      );
+      return { id: existingMealPlan.id, imagePath: existingMealPlan.imagePath };
+    }
+
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -111,6 +124,26 @@ export class CrawlService {
       // 페이지 로딩 완료 대기
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
+      // 게시글 제목 추출
+      const title = await page.evaluate(() => {
+        const titleSelectors = [
+          'h1',
+          '.title',
+          '.subject',
+          '.post-title',
+          '.board-title',
+          '.article-title',
+        ];
+
+        for (const selector of titleSelectors) {
+          const element = document.querySelector(selector);
+          if (element && element.textContent) {
+            return element.textContent.trim();
+          }
+        }
+        return '주간 식단표';
+      });
+
       // 게시글 내의 이미지 찾기
       const imageSelectors = [
         '.content img', // 게시글 컨텐츠 내 이미지
@@ -200,7 +233,29 @@ export class CrawlService {
       console.log(`식단표 이미지 저장 완료: ${imagePath}`);
       console.log(`파일 크기: ${imageBuffer.length} bytes`);
 
-      return imagePath;
+      // 주차 계산
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay()); // 일요일
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // 토요일
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      // 데이터베이스에 저장
+      const mealPlan = await this.mealPlanService.create({
+        title: title,
+        imageUrl: imageUrl,
+        imagePath: imagePath,
+        weekStartDate: startOfWeek,
+        weekEndDate: endOfWeek,
+        isAnalyzed: false,
+      });
+
+      console.log(`식단표 데이터베이스 저장 완료: ID ${mealPlan.id}`);
+
+      return { id: mealPlan.id, imagePath: imagePath };
     } catch (error) {
       console.error('식단표 크롤링 중 오류 발생:', error);
       throw new Error(`식단표 크롤링 실패: ${error.message}`);
@@ -240,5 +295,15 @@ export class CrawlService {
     } catch (error) {
       console.error('임시 파일 정리 중 오류:', error);
     }
+  }
+
+  /** 저장된 식단표 조회 */
+  async getSavedMealPlans() {
+    return await this.mealPlanService.findAll();
+  }
+
+  /** 현재 주 식단표 조회 */
+  async getCurrentWeekMealPlan() {
+    return await this.mealPlanService.findCurrentWeek();
   }
 }

@@ -1,57 +1,76 @@
-import { Controller, Get, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
-import { promises as fs } from 'fs';
+import { Controller, Get, Post } from '@nestjs/common';
 import { CrawlService } from './crawl.service';
 
 @Controller('crawl')
 export class CrawlController {
   constructor(private readonly crawlService: CrawlService) {}
 
-  @Get('test')
-  async testCrawling(@Res() res: Response) {
+  @Post('weekly-meal')
+  async crawlWeeklyMeal() {
     try {
-      console.log('=== API를 통한 크롤링 테스트 시작 ===');
-
-      const startTime = Date.now();
-      const imagePath = await this.crawlService.getWeeklyMeal();
-      const endTime = Date.now();
-      const duration = (endTime - startTime) / 1000;
-
-      const stats = await fs.stat(imagePath);
-
-      return res.json({
+      const result = await this.crawlService.getWeeklyMeal();
+      return {
         success: true,
-        message: '크롤링 성공',
-        data: {
-          imagePath,
-          duration: `${duration}초`,
-          fileSize: `${(stats.size / 1024).toFixed(2)} KB`,
-        },
-      });
+        message: '식단표 크롤링 및 저장이 완료되었습니다.',
+        data: result,
+      };
     } catch (error) {
-      console.error('크롤링 실패:', error);
-      return res.status(500).json({
+      return {
         success: false,
-        message: '크롤링 실패',
+        message: '식단표 크롤링 중 오류가 발생했습니다.',
         error: error.message,
-      });
+      };
+    }
+  }
+
+  @Get('saved-meal-plans')
+  async getSavedMealPlans() {
+    try {
+      const mealPlans = await this.crawlService.getSavedMealPlans();
+      return {
+        success: true,
+        data: mealPlans,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '저장된 식단표 조회 중 오류가 발생했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Get('current-week')
+  async getCurrentWeekMealPlan() {
+    try {
+      const mealPlan = await this.crawlService.getCurrentWeekMealPlan();
+      return {
+        success: true,
+        data: mealPlan,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '현재 주 식단표 조회 중 오류가 발생했습니다.',
+        error: error.message,
+      };
     }
   }
 
   @Post('cleanup')
-  async cleanupTempFiles(@Res() res: Response) {
+  async cleanupTempFiles() {
     try {
       await this.crawlService.cleanupTempFiles();
-      return res.json({
+      return {
         success: true,
-        message: '임시 파일 정리 완료',
-      });
+        message: '임시 파일 정리가 완료되었습니다.',
+      };
     } catch (error) {
-      return res.status(500).json({
+      return {
         success: false,
-        message: '임시 파일 정리 실패',
+        message: '임시 파일 정리 중 오류가 발생했습니다.',
         error: error.message,
-      });
+      };
     }
   }
 }
