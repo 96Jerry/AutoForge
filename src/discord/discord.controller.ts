@@ -37,60 +37,18 @@ export class DiscordController {
     }
   }
 
-  /**
-   * 오늘의 메뉴 테스트
-   */
-  @Post('test-today-menu')
-  async testTodayMenu() {
-    try {
-      const testMenu = `🍽️ **점심**
-1코스: 김치찌개, 흰쌀밥
-2코스: 제육볶음, 흰쌀밥
-3코스: 생선구이, 흰쌀밥
-
-🌙 **저녁**: 치킨까스, 돈까스`;
-
-      await this.discordService.sendTodayMenu(testMenu);
-      return { success: true, message: '오늘의 메뉴 테스트 전송 완료' };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  }
-
-  /**
-   * 주간 메뉴 테스트
-   */
-  @Post('test-weekly-menu')
-  async testWeeklyMenu() {
-    try {
-      const testWeeklyMenu = `
-**월요일**
-🍽️ **점심**
-1코스: 김치찌개, 흰쌀밥
-2코스: 제육볶음, 흰쌀밥
-3코스: 생선구이, 흰쌀밥
-🌙 **저녁**: 치킨까스
-
-**화요일**
-🍽️ **점심**
-1코스: 된장찌개, 흰쌀밥
-2코스: 불고기, 흰쌀밥
-3코스: 갈치조림, 흰쌀밥
-🌙 **저녁**: 돈까스
-
-**수요일**
-🍽️ **점심**
-1코스: 순두부찌개, 흰쌀밥
-2코스: 닭볶음탕, 흰쌀밥
-3코스: 고등어구이, 흰쌀밥
-🌙 **저녁**: 함박스테이크`;
-
-      await this.discordService.sendWeeklyMenu(testWeeklyMenu);
-      return { success: true, message: '주간 메뉴 테스트 전송 완료' };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  }
+  // /**
+  //  * 오늘의 메뉴 테스트 (더 이상 사용되지 않음 - 크롤링 서비스를 통해 처리)
+  //  */
+  // @Post('test-today-menu')
+  // async testTodayMenu() {
+  //   try {
+  //     await this.discordService.sendTodayMenu();
+  //     return { success: true, message: '오늘의 메뉴 테스트 전송 완료' };
+  //   } catch (error) {
+  //     return { success: false, error: error.message };
+  //   }
+  // }
 
   /**
    * Discord 연결 상태 확인

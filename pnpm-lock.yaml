@@ -32,6 +32,9 @@ dependencies:
   '@types/puppeteer':
     specifier: ^7.0.4
     version: 7.0.4(typescript@5.8.3)
+  dayjs:
+    specifier: ^1.11.13
+    version: 1.11.13
   discord.js:
     specifier: ^14.21.0
     version: 14.21.0

@@ -1,3 +1,4 @@
+import { RestaurantName } from 'src/crawl/enums/restaurant-name.enum';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,34 +7,28 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('meal_plans')
+@Entity('meal_plan')
 export class MealPlan {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  title: string;
+  @Column({ type: 'varchar' })
+  date: string;
+
+  @Column({ type: 'varchar', length: 500, array: true })
+  imagePaths: string[];
+
+  @Column({ type: 'enum', enum: RestaurantName })
+  restaurantName: RestaurantName;
 
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'varchar', length: 500 })
-  imageUrl: string;
-
-  @Column({ type: 'varchar', length: 255 })
-  imagePath: string;
-
-  @Column({ type: 'date' })
-  weekStartDate: Date;
-
-  @Column({ type: 'date' })
-  weekEndDate: Date;
-
-  @Column({ type: 'json', nullable: true })
-  menuData: any; // 메뉴 분석 결과를 JSON으로 저장
-
   @Column({ type: 'boolean', default: false })
   isAnalyzed: boolean;
+
+  @Column({ type: 'jsonb', nullable: true })
+  menuData: any;
 
   @CreateDateColumn()
   createdAt: Date;
