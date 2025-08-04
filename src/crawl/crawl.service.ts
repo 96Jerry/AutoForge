@@ -151,26 +151,6 @@ export class CrawlService {
       // 페이지 로딩 완료 대기
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // 게시글 제목 추출
-      const title = await page.evaluate(() => {
-        const titleSelectors = [
-          'h1',
-          '.title',
-          '.subject',
-          '.post-title',
-          '.board-title',
-          '.article-title',
-        ];
-
-        for (const selector of titleSelectors) {
-          const element = document.querySelector(selector);
-          if (element && element.textContent) {
-            return element.textContent.trim();
-          }
-        }
-        return '오늘의 식단표';
-      });
-
       // 게시글 내의 모든 이미지 찾기
       const imageSelectors = [
         '.content img', // 게시글 컨텐츠 내 이미지
@@ -248,8 +228,6 @@ export class CrawlService {
         date: today,
         imagePaths: imagePaths,
         restaurantName: restaurantName,
-        description: title,
-        isAnalyzed: false,
       });
 
       console.log(

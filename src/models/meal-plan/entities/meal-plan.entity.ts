@@ -21,15 +21,6 @@ export class MealPlan {
   @Column({ type: 'enum', enum: RestaurantName })
   restaurantName: RestaurantName;
 
-  @Column({ type: 'text', nullable: true })
-  description: string;
-
-  @Column({ type: 'boolean', default: false })
-  isAnalyzed: boolean;
-
-  @Column({ type: 'jsonb', nullable: true })
-  menuData: any;
-
   @CreateDateColumn()
   createdAt: Date;
 

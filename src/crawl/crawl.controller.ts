@@ -132,23 +132,6 @@ export class CrawlController {
     }
   }
 
-  @Get('statistics')
-  async getStatistics() {
-    try {
-      const statistics = await this.mealPlanService.getStatistics();
-      return {
-        success: true,
-        data: statistics,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: '통계 조회 중 오류가 발생했습니다.',
-        error: error.message,
-      };
-    }
-  }
-
   /** 테스트용: 크롤링 서비스 상태 확인 */
   @Get('test-status')
   async testStatus() {

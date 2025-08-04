@@ -52,10 +52,9 @@ export class CronService {
     } catch (error) {
       console.error('오늘의 메뉴 Discord 전송 중 오류 발생:', error);
 
-      // 오류 발생 시 간단한 메시지라도 전송
       try {
         await this.discordService.sendMessage(
-          '⚠️ 오늘의 메뉴를 가져오는 중 오류가 발생했습니다. 나중에 다시 시도해주세요.',
+          `⚠️ 오늘의 메뉴를 가져오는 중 오류가 발생했습니다. (${error.message})`,
         );
       } catch (discordError) {
         console.error('Discord 오류 메시지 전송 실패:', discordError);
