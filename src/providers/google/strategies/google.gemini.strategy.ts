@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { Injectable } from '@nestjs/common';
-import { GEMINI_API_KEY } from '../../../config';
+import { GEMINI_API_KEY } from '../../../../config';
 import * as fs from 'fs';
 
 export interface MenuCourse {

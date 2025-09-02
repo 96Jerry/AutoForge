@@ -4,7 +4,7 @@ import { html } from '.';
 import { GoogleStrategy } from './enums/google-strategy.enum';
 import { GoogleCalendarStrategy } from './strategies/google.calendar.strategy';
 import { GoogleMailStrategy } from './strategies/google.mail.strategy';
-import { GoogleGeminiStrategy } from 'src/google/strategies/google.gemini.strategy';
+import { GoogleGeminiStrategy } from 'src/providers/google/strategies/google.gemini.strategy';
 
 @Injectable()
 export class GoogleService {

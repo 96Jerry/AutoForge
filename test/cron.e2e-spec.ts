@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AppModule } from 'src/app.module';
 import { CronService } from 'src/cron/cron.service';
-import { GoogleService } from 'src/google/google.service';
+import { GoogleService } from 'src/providers/google/google.service';
 
 describe('CronService', () => {
   let cronService: CronService;

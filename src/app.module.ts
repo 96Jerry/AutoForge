@@ -8,10 +8,10 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { CrawlModule } from './crawl/crawl.module';
 import { CronModule } from './cron/cron.module';
-import { DiscordController } from './discord/discord.controller';
-import { DiscordModule } from './discord/discord.module';
-import { GoogleController } from './google/google.controller';
-import { GoogleModule } from './google/google.module';
+import { DiscordController } from './providers/discord/discord.controller';
+import { DiscordModule } from './providers/discord/discord.module';
+import { GoogleController } from './providers/google/google.controller';
+import { GoogleModule } from './providers/google/google.module';
 import { MealPlanModule } from './models/meal-plan/meal-plan.module';
 import {
   DB_HOST,
@@ -32,7 +32,7 @@ import {
       database: DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // 개발 환경에서만 true, 프로덕션에서는 false
-      logging: true,
+      // logging: true,
     }),
     GoogleModule,
     AuthModule,
