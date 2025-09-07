@@ -1,4 +1,4 @@
-import { Controller, Post, Get } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { CronService } from './cron.service';
 
 @Controller('cron')
@@ -75,40 +75,6 @@ export class CronController {
       return {
         success: false,
         message: '전체 파이프라인 테스트 중 오류가 발생했습니다.',
-        error: error.message,
-      };
-    }
-  }
-
-  /**
-   * Cron 서비스 상태 확인
-   */
-  @Get('status')
-  async getStatus() {
-    try {
-      return {
-        success: true,
-        message: 'Cron 서비스가 정상적으로 작동 중입니다.',
-        data: {
-          availableMethods: ['sendVacationEmail', 'sendTodayMenuToDiscord'],
-          cronJobs: [
-            {
-              name: 'sendVacationEmail',
-              schedule: '0 * 9 * * *', // 매일 9시
-              description: '휴가 이메일 전송',
-            },
-            {
-              name: 'sendTodayMenuToDiscord',
-              schedule: '0 30 8 * * 1-5', // 월~금 8시 30분
-              description: '오늘의 메뉴 Discord 전송',
-            },
-          ],
-        },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: 'Cron 서비스 상태 확인 중 오류가 발생했습니다.',
         error: error.message,
       };
     }
