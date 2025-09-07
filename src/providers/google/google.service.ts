@@ -97,7 +97,7 @@ export class GoogleService {
       GoogleStrategy.Calendar,
     ).checkCalendar('en.south_korea#holiday@group.v.calendar.google.com');
 
-    if (!holidayEvents || !holidayEvents.items || !holidayEvents.items.length) {
+    if (!holidayEvents?.items?.length) {
       throw new Error('Holiday events not found');
     }
 
@@ -122,11 +122,7 @@ export class GoogleService {
     ).checkCalendar(
       'madsq.net_rdahdb3dsksr1p3jm93o63lbgs@group.calendar.google.com',
     );
-    if (
-      !vacationEvents ||
-      !vacationEvents.items ||
-      !vacationEvents.items.length
-    ) {
+    if (!vacationEvents?.items?.length) {
       throw new Error('Vacation event not found');
     }
 

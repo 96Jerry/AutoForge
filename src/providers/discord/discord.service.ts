@@ -4,7 +4,7 @@ import { DISCORD_WEBHOOK_URL } from 'config';
 
 @Injectable()
 export class DiscordService {
-  private webhookClient: WebhookClient;
+  private readonly webhookClient: WebhookClient;
 
   constructor() {
     if (!DISCORD_WEBHOOK_URL) {
